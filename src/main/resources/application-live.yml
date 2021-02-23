@@ -1,0 +1,65 @@
+app:
+  name: parser
+
+server:
+  port: 18001
+  session:
+    timeout: 12
+  compression:
+     enabled: true
+     mime-types: application/json,application/xml,text/html,text/xml,text/plain    
+  tomcat:
+    uri-encoding: UTF-8
+
+  http:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      location: ${java.io.tmpdir}
+      
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+      
+  #JSP to Modify Not Restart Server
+  servlet:
+    jsp:
+      init-parameters:
+        development: true      
+      
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  devtools:
+    livereload:
+      enabled: true
+      
+  resources:
+    static-locations: file:public/WEB-INF/resources
+            
+  datasource:
+    hikari:
+      primary:
+          driver-class-name: "org.mariadb.jdbc.Driver"
+          jdbc-url: "jdbc:mariadb://bizdb01.ngsol.co.kr:3408/bizbooks?allowMultiQueries=true&characterEncoding=utf-8"
+          username: "bizbooks"
+          password: "!@#bizdbsbwps09#"
+          maximumPoolSize: 10
+          max-active: 10
+          max-idle: 10
+          min-idle: 10
+          initial-size: 10
+          test-on-borrow: "true"
+          test-on-return: "true"
+          idleTimeout: 600000
+          max-lifetime: 2000000
+          connection-timeout: 30000
+          validation-timeout: 50000
+          auto-commit: "true"
+          poolName: ${app.name}
+     
+logging:
+  config: classpath:config/live/logback.xml

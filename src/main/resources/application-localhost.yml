@@ -1,0 +1,33 @@
+app:
+  name: parser
+
+server:
+  port: 18777
+  session:
+    timeout: 12
+  compression:
+     enabled: true
+     mime-types: application/json,application/xml,text/html,text/xml,text/plain    
+  tomcat:
+    uri-encoding: UTF-8
+    
+spring:
+  devtools:
+    livereload:
+      enabled: true
+                  
+  datasource:
+    hikari:
+        driver-class-name: "org.mariadb.jdbc.Driver"
+        jdbc-url: "jdbc:mariadb://127.0.0.1:3306/bizbooks?allowMultiQueries=true&characterEncoding=utf-8"
+        username: "root"
+        password: "1234"
+        connectionTimeout : 30000
+        maximumPoolSize : 10
+        maxLifetime : 1800000
+        poolName : HikariCP
+               
+logging:
+  config: classpath:config/localhost/logback.xml 
+
+ 
