@@ -12,14 +12,18 @@ import com.google.gson.reflect.TypeToken;
 
 import kr.co.nzsol.dao.parse.common.ParseCommonMapper;
 import kr.co.nzsol.service.dto.common.ParseDataDto;
-import kr.co.nzsol.service.parse.common.IDataConvertService;
+import kr.co.nzsol.service.parse.acv.IAcvConvertService;
 import kr.co.nzsol.service.parse.common.IParseService;
+import kr.co.nzsol.service.parse.repstatus.IRepStatusConvertService;
 
 @Service
 public class ParseService implements IParseService{
+
+	@Autowired
+	IRepStatusConvertService iRepStatusConvertService;
 	
 	@Autowired
-	IDataConvertService dataConvertService;
+	IAcvConvertService iAcvConvertService;
 	
 	@Autowired
 	ParseCommonMapper parseCommonMapper;
@@ -64,11 +68,24 @@ public class ParseService implements IParseService{
 			parseCommonMapper.insertParseInfo(parseDataDto);
 			
 			for(Map<String, Object> map : dataList) {
-				dataConvertService.convertData(map);
 				
-				if(!map.containsKey("Flag")) return "Flag NULL";
-
-				int flag = (int)Math.floor(((double)map.get("Flag")));
+				if(!map.containsKey("Flag")) return "Flag is NULL";
+				
+				int flag = (int)Math.floor((double)map.get("Flag"));
+				flag = (flag >= 21 && flag <= 64) ? flag : 0;
+				
+				if(flag == 0) return "Flag Error";
+				
+				int flagType = flag / 10;
+				
+				switch(flagType) {
+					case 2: case 3: case 4: case 5:
+						iRepStatusConvertService.convertData(flagType,map);
+						break;
+					case 6: 
+						iAcvConvertService.convertData(flagType,map);
+						break;
+				}
 			}
 			
 			// 파싱작업 Update완료 
@@ -80,5 +97,4 @@ public class ParseService implements IParseService{
 		
 		return msg;
 	}
-		
 }
