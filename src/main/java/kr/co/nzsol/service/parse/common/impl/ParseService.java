@@ -20,10 +20,10 @@ import kr.co.nzsol.service.parse.repstatus.IRepStatusConvertService;
 public class ParseService implements IParseService{
 
 	@Autowired
-	IRepStatusConvertService iRepStatusConvertService;
+	IRepStatusConvertService repStatusConvertService;
 	
 	@Autowired
-	IAcvConvertService iAcvConvertService;
+	IAcvConvertService acvConvertService;
 	
 	@Autowired
 	ParseCommonMapper parseCommonMapper;
@@ -80,10 +80,10 @@ public class ParseService implements IParseService{
 				
 				switch(flagType) {
 					case 2: case 3: case 4: case 5:
-						iRepStatusConvertService.convertData(flagType,map);
+						repStatusConvertService.convertData(flagType,map);
 						break;
 					case 6: 
-						iAcvConvertService.convertData(flagType,map);
+						acvConvertService.convertData(flag,map);
 						break;
 				}
 			}
