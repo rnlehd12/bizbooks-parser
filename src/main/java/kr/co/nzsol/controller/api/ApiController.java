@@ -3,9 +3,9 @@ package kr.co.nzsol.controller.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.nzsol.service.dto.common.ParseDataDto;
 import kr.co.nzsol.service.parse.common.IParseService;
 
 /**
@@ -21,14 +21,8 @@ public class ApiController {
 	IParseService parseService;
 	
 	@GetMapping(value= {"","/"})
-	public String kclepDataParser(@RequestParam(value="parseData",required=false) String parseData) {
+	public String kclepDataParser(ParseDataDto parseDataDto) {
 	
-		int result = 0;
-		
-		if(parseData == null || "".equals(parseData)) return "FAIL!";
-		
-		result = parseService.dataParsing(parseData);
-		
-		return "SUCESS!";
+		return parseService.dataParsing(parseDataDto);
 	}
 }

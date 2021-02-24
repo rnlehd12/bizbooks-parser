@@ -9,15 +9,38 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import kr.co.nzsol.service.dto.common.ParseDataDto;
 import kr.co.nzsol.service.parse.common.IParseService;
 
 @Service
 public class ParseService implements IParseService{
 
+	/**
+	 * 2021-02-23 강귀정
+	 * json 데이터 파싱 service
+	 * 
+	 * # 원천세 마감: 21, 제작: 22, 신고: 23, 마감취소: 24
+	 * # 부가세 마감: 31, 제작: 32, 신고: 33, 마감취소: 34
+	 * # 법인세 마감: 41, 제작: 42, 신고: 43, 마감취소: 44
+	 * # 종소세 마감: 51, 제작: 52, 신고: 53, 마감취소: 54
+	 * # 부가세 신고서: 61
+	 * # 부가세 신고서 간이: 62
+	 * # 계산서 합계표: 63
+	 * # 세금계산서 합계표: 64
+	 * # 금액은 마감일때만 입력
+	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public int dataParsing(String parseData) {
+	public String dataParsing(ParseDataDto parseDataDto) {
 		
+		String sendUserId = parseDataDto.getSendUserId();
+		String parseData = parseDataDto.getParseData();
+
+		if(sendUserId == null || "".equals(sendUserId)) return "SENDUSERID NULL";
+		
+		if(parseData == null || "".equals(parseData)) return "JSON NULL";
+			
+		String msg = "SUCCESS!";
 		Gson gson = new Gson();
 		List<Map<String, Object>> dataList =  new ArrayList<Map<String, Object>>();
 		
@@ -25,17 +48,19 @@ public class ParseService implements IParseService{
 			
 			dataList = (List<Map<String, Object>>)gson.fromJson(parseData, new TypeToken<List<Map<String, Object>>>(){}.getType());
 			
-			for(Map<String, Object> m : dataList) {
-				int flag = (int)Math.floor(((double)m.get("Flag")));
-				System.out.println(flag);
-				//System.out.println(m);
+			for(Map<String, Object> map : dataList) {
+				
+				if(!map.containsKey("Flag")) return "Flag NULL";
+
+				int flag = (int)Math.floor(((double)map.get("Flag")));
+				System.out.println(flag/10);
 			}
 		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return 0;
+		return msg;
 	}
-
+	
 }
