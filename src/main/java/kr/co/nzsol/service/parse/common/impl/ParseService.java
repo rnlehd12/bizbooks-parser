@@ -4,20 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import kr.co.nzsol.service.dto.common.ParseDataDto;
+import kr.co.nzsol.service.parse.common.IDataConvertService;
 import kr.co.nzsol.service.parse.common.IParseService;
 
 @Service
 public class ParseService implements IParseService{
-
+	
+	@Autowired
+	IDataConvertService dataConvertService;
+	
 	/**
 	 * 2021-02-23 강귀정
 	 * json 데이터 파싱 service
+	 * 
+	 * @param : ParseDataDto
 	 * 
 	 * # 원천세 마감: 21, 제작: 22, 신고: 23, 마감취소: 24
 	 * # 부가세 마감: 31, 제작: 32, 신고: 33, 마감취소: 34
@@ -46,14 +53,11 @@ public class ParseService implements IParseService{
 		
 		try {
 			
+			//- 데이터 리스트 파싱
 			dataList = (List<Map<String, Object>>)gson.fromJson(parseData, new TypeToken<List<Map<String, Object>>>(){}.getType());
 			
 			for(Map<String, Object> map : dataList) {
-				
-				if(!map.containsKey("Flag")) return "Flag NULL";
-
-				int flag = (int)Math.floor(((double)map.get("Flag")));
-				System.out.println(flag/10);
+				dataConvertService.convertData(map);
 			}
 		
 		} catch (Exception e) {
@@ -62,5 +66,5 @@ public class ParseService implements IParseService{
 		
 		return msg;
 	}
-	
+		
 }
