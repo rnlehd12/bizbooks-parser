@@ -4,17 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import kr.co.nzsol.dao.parse.common.ParseCommonMapper;
 import kr.co.nzsol.service.dto.common.ParseDataDto;
 import kr.co.nzsol.service.parse.common.IParseService;
 
 @Service
 public class ParseService implements IParseService{
-
+	
+	@Autowired
+	ParseCommonMapper parseCommonMapper;
 	/**
 	 * 2021-02-23 강귀정
 	 * json 데이터 파싱 service
@@ -47,15 +51,16 @@ public class ParseService implements IParseService{
 		try {
 			
 			dataList = (List<Map<String, Object>>)gson.fromJson(parseData, new TypeToken<List<Map<String, Object>>>(){}.getType());
+			parseCommonMapper.insertParseInfo(parseDataDto);
 			
 			for(Map<String, Object> map : dataList) {
 				
 				if(!map.containsKey("Flag")) return "Flag NULL";
 
 				int flag = (int)Math.floor(((double)map.get("Flag")));
-				System.out.println(flag/10);
 			}
-		
+			// 파싱작업 Update완료 
+			/* parseCommonMapper.updateParseInfo(parseDataDto); */
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

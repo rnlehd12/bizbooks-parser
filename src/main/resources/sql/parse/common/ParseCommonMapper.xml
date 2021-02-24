@@ -1,0 +1,24 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.nzsol.dao.parse.common.ParseCommonMapper">
+	<insert id="insertParseInfo" parameterType="kr.co.nzsol.service.dto.common.ParseDataDto" useGeneratedKeys="true" keyProperty="seq">
+		INSERT INTO bizbooks.taxagent_atmparseinfo 
+		     ( 
+		     	SendUserId 
+		     ) 
+		VALUES 
+		     (
+		     	#{sendUserId}
+		     )
+	
+	</insert>
+	
+	<update id="updateParseInfo" parameterType="kr.co.nzsol.service.dto.common.ParseDataDto">
+		UPDATE bizbooks.taxagent_atmparseinfo
+		   SET ParseYn = 'Y'
+	   <where>
+		   AND Seq = #{seq}
+	  </where>
+	
+	</update>
+</mapper>
