@@ -12,22 +12,22 @@ import com.google.gson.reflect.TypeToken;
 
 import kr.co.nzsol.dao.parse.common.ParseCommonMapper;
 import kr.co.nzsol.service.dto.common.ParseDataDto;
-import kr.co.nzsol.service.parse.acv.IAcvConvertService;
+import kr.co.nzsol.service.parse.acv.IAcvParseService;
 import kr.co.nzsol.service.parse.common.IParseService;
-import kr.co.nzsol.service.parse.repstatus.IRepStatusConvertService;
+import kr.co.nzsol.service.parse.repstatus.IRepStatusParseService;
 
 @Service
 public class ParseService implements IParseService{
-
-	@Autowired
-	IRepStatusConvertService repStatusConvertService;
-	
-	@Autowired
-	IAcvConvertService acvConvertService;
 	
 	@Autowired
 	ParseCommonMapper parseCommonMapper;
 
+	@Autowired
+	IRepStatusParseService repStatusParseService;
+	
+	@Autowired
+	IAcvParseService acvParseService;
+	
 	/**
 	 * 2021-02-23 강귀정
 	 * json 데이터 파싱 service
@@ -76,16 +76,14 @@ public class ParseService implements IParseService{
 				
 				if(flag == 0) return "Flag Error";
 				
+				//- 2:(신고)원천 / 3:(신고)부가 / 4:(신고)법인 / 5:(신고)종소 / 6:부가가치세
 				int flagType = flag / 10;
 				
-				switch(flagType) {
-					case 2: case 3: case 4: case 5:
-						repStatusConvertService.convertData(flagType,map);
-						break;
-					case 6: 
-						acvConvertService.convertData(flag,map);
-						break;
-				}
+				if(flagType <= 1 || flagType >= 7) return "FlagType Error";
+				
+				if(flagType <= 5) repStatusParseService.insertData(flagType,map);
+				if(flagType == 6) acvParseService.insertData(flag,map);
+					
 			}
 			
 			// 파싱작업 Update완료 

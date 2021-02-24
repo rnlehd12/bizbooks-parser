@@ -1,0 +1,46 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.nzsol.dao.parse.repstatus.RepStatusMapper">
+
+	<insert id="insertAtmTax" parameterType="java.util.Map">
+		INSERT INTO  TaxAgent_AtmTax
+          (
+            CompCd, RglRtnSec, BelYM, PaymYM, TaxAgentCompCd
+          , UserId, BusnPersRegsNo, TotPaymAmt, PaymTax, CloseDt, MakeDt
+          , RptDt, Status, RglRtnSecDtlCd, TaxAdjtmYn, DispIncYn, RefundYn
+          , RegId
+          )
+          SELECT cm.CompCd, #{RglRtnSec}, #{BelYM}, #{PaymYM}, #{TaxAgentCompCd}
+                , #{UserId}, #{BusnPersRegsNo}, #{TotPaymAmt}, #{PaymTax}
+                , #{CloseDt}, #{MakeDt}, #{RptDt}, #{Status}, #{RglRtnSecDtlCd}
+                , #{TaxAdjtmYn}, #{DispIncYn}, #{RefundYn}, #{UserId}                                     
+            FROM Common_CompMng cm
+            LEFT JOIN Common_Comp c
+              ON c.CompCd = cm.ComPCd
+            WHERE 1 = 1
+              AND cm.TaxAgentCompCd = #{TaxAgentCompCd}
+              AND c.BusnPersRegsNo = #{BusnPersRegsNo}
+
+              ON DUPLICATE KEY UPDATE
+                  TaxAgentCompCd = #{TaxAgentCompCd}
+                , BusnPersRegsNo = #{BusnPersRegsNo}
+                , TotPaymAmt = #{TotPaymAmt}
+                , PaymTax = #{PaymTax}
+                , CloseDt = #{CloseDt}
+                , MakeDt = #{MakeDt}
+                , RptDt = #{RptDt}
+                , Status = #{Status}
+                , UptId = #{UserId}
+                , MakeDt = NULL
+                , RptDt = NULL
+	</insert>
+	
+	<insert id="insertAtmAcv" parameterType="java.util.Map">
+	</insert>
+	
+	<insert id="insertAtmCor" parameterType="java.util.Map">
+	</insert>
+	
+	<insert id="insertAtmTotincm" parameterType="java.util.Map">
+	</insert>
+	
+</mapper>
