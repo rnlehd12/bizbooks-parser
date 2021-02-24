@@ -11,5 +11,5 @@ public class ParseDataDto {
 
 	private String sendUserId;		//세무사랑 ID
 	private String parseData;		//파싱할 json
-	
+	private int seq;				//파싱정보seq
 }
